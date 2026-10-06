@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const TASK_STATUSES = ['todo', 'doing', 'done']
 
