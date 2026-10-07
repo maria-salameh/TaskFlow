@@ -1,21 +1,22 @@
 import jwt from "jsonwebtoken";
 import { config } from "../config/env.js";
+import { HttpError } from "../utils/httpError.js";
 
-export function requireAuth(req, res, next) {
-  const token = req.header("Authorization");
-  console.log(token);
+// Vérifie l'en-tête "Authorization: Bearer <JWT>" et place l'id utilisateur dans req.userId.
+// Jeton absent, mal formé, falsifié ou expiré => 401 UNAUTHORIZED.
+export function requireAuth(req, _res, next) {
+  const header = req.header("Authorization") ?? "";
+  const [scheme, token] = header.split(" ");
 
-  if (!token) {
-    return res.status(401).json({ message: "Token absent" });
+  if (scheme !== "Bearer" || !token) {
+    return next(new HttpError(401, "UNAUTHORIZED", "Authentification requise"));
   }
-  const tokenClean = token.split(" ")[1];
-  console.log(tokenClean);
+
   try {
-    const verified = jwt.verify(tokenClean, config.jwtSecret);
-    console.log(verified);
+    const verified = jwt.verify(token, config.jwtSecret);
     req.userId = verified.userId;
-    next();
+    return next();
   } catch {
-    throw Error("Token Invalide");
+    return next(new HttpError(401, "UNAUTHORIZED", "Jeton invalide ou expiré"));
   }
 }
