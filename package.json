@@ -1,5 +1,5 @@
 {
-  "name": "fullstack-js-starter",
+  "name": "taskflow",
   "private": true,
   "version": "1.0.0",
   "workspaces": [
@@ -10,13 +10,21 @@
     "dev": "concurrently -n backend,frontend -c blue,green \"npm run dev --workspace backend\" \"npm run dev --workspace frontend\"",
     "build": "npm run build --workspace frontend",
     "start": "npm run start --workspace backend",
-    "test": "npm run test --workspace backend"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "npm run test --workspace backend && npm run test --workspace frontend",
+    "test:back": "npm run test --workspace backend",
+    "test:front": "npm run test --workspace frontend",
+    "test:e2e": "playwright test"
   },
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.63.0",
+    "concurrently": "^9.2.1",
+    "eslint": "^10.12.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.7",
+    "globals": "^17.13.0"
   },
-  "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "jsonwebtoken": "^9.0.3"
-  }
+  "type": "module"
 }
