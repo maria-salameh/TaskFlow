@@ -1,7 +1,11 @@
 import { User } from '../models/User.js';
 
 export async function getMe(userId) {
-    return await User.findById(userId)
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user;
 }
 
 export async function updateMe(userId, userData) {
