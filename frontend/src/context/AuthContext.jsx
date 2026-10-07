@@ -1,48 +1,57 @@
-import { createContext, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import * as authService from "../services/authServices.js";
+import { AuthContext } from "./authContextObject.js";
 
-export const AuthContext = createContext(null);
+// Stratégie de session : le JWT est gardé dans le localStorage pour survivre à un
+// rechargement de page. Compromis : simple, mais lisible par un script injecté (XSS),
+// d'où l'expiration du jeton (7 jours par défaut) et React qui échappe le contenu affiché.
+// La vraie protection des données reste la vérification du JWT par l'API.
 
-function readStoredToken() {
-  const stored = localStorage.getItem("token");
-  // Ignore une valeur cassée laissée par une ancienne version ("undefined")
-  return stored && stored !== "undefined" && stored !== "null" ? stored : null;
+function readSession() {
+  try {
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user") ?? "null");
+    if (!token || token === "undefined" || token === "null") return { token: null, user: null };
+    return { token, user };
+  } catch {
+    return { token: null, user: null };
+  }
 }
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(readStoredToken);
+  const [session, setSession] = useState(readSession);
 
-  function saveToken(newToken) {
-    localStorage.setItem("token", newToken);
-    setToken(newToken);
+  function saveSession({ token, user }) {
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+    setSession({ token, user });
   }
 
   async function login(email, password) {
-    const { token } = await authService.login(email, password);
-    if (!token) throw new Error("Réponse de connexion invalide");
-    saveToken(token);
+    saveSession(await authService.login(email, password));
   }
 
-  // useCallback : fonction stable, utilisée comme dépendance dans useTasks
+  async function register(email, password) {
+    saveSession(await authService.register(email, password));
+  }
+
+  // useCallback : fonction stable, utilisée comme dépendance dans les hooks de données
   const logout = useCallback(() => {
     localStorage.removeItem("token");
-    setToken(null);
+    localStorage.removeItem("user");
+    setSession({ token: null, user: null });
   }, []);
-
-  async function register(email, name, password) {
-    const res = await authService.register(email, name, password);
-    // Le contrat prévoit que register renvoie { user, token }.
-    // Tant que l'API ne renvoie pas de token, on enchaîne avec un login.
-    if (res?.token) {
-      saveToken(res.token);
-    } else {
-      await login(email, password);
-    }
-  }
 
   return (
     <AuthContext.Provider
-      value={{ token, isAuthenticated: !!token, login, logout, register }}
+      value={{
+        token: session.token,
+        user: session.user,
+        isAuthenticated: Boolean(session.token),
+        login,
+        logout,
+        register,
+      }}
     >
       {children}
     </AuthContext.Provider>

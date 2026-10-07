@@ -1,31 +1,32 @@
 import { useState } from "react";
 import TaskForm from "./TaskForm.jsx";
-import { STATUS_LABELS } from "../services/taskServices.js";
+import { PRIORITY_LABELS, STATUS_LABELS } from "../services/taskServices.js";
 import { formatDateKey, todayKey } from "../utils/dates.js";
+import { isOverdue } from "../utils/taskFilters.js";
 
 export default function TaskItem({ task, onUpdate, onDelete }) {
   const [editing, setEditing] = useState(false);
   const [error, setError] = useState(null);
+  const [busy, setBusy] = useState(false);
 
-  const overdue = task.dueDate && task.status !== "done" && task.dueDate < todayKey();
+  const overdue = isOverdue(task, todayKey());
+  const priority = task.priority ?? "medium";
 
-  async function handleStatusChange(e) {
+  async function run(action) {
     setError(null);
+    setBusy(true);
     try {
-      await onUpdate(task.id, { status: e.target.value });
+      await action();
     } catch (err) {
       setError(err.message);
+    } finally {
+      setBusy(false);
     }
   }
 
-  async function handleDelete() {
+  function handleDelete() {
     if (!window.confirm(`Supprimer la tâche « ${task.title} » ?`)) return;
-    setError(null);
-    try {
-      await onDelete(task.id);
-    } catch (err) {
-      setError(err.message);
-    }
+    run(() => onDelete(task.id));
   }
 
   if (editing) {
@@ -44,9 +45,15 @@ export default function TaskItem({ task, onUpdate, onDelete }) {
   }
 
   return (
-    <li className={`task-item status-${task.status}`}>
+    <li className={`task-item status-${task.status}`} aria-busy={busy}>
       <div className="task-main">
-        <h3>{task.title}</h3>
+        <h3>
+          <span className={`priority-badge priority-${priority}`}>
+            <span className="visually-hidden">Priorité </span>
+            {PRIORITY_LABELS[priority]}
+          </span>
+          {task.title}
+        </h3>
         {task.description && <p className="task-description">{task.description}</p>}
         <p className="task-meta">
           {task.dueDate ? (
@@ -58,7 +65,11 @@ export default function TaskItem({ task, onUpdate, onDelete }) {
             <span>Sans échéance</span>
           )}
         </p>
-        {error && <p className="inline-error" role="alert">{error}</p>}
+        {error && (
+          <p className="inline-error" role="alert">
+            {error}
+          </p>
+        )}
       </div>
 
       <div className="task-actions">
@@ -69,16 +80,25 @@ export default function TaskItem({ task, onUpdate, onDelete }) {
           id={`status-${task.id}`}
           className={`status-select status-${task.status}`}
           value={task.status}
-          onChange={handleStatusChange}
+          disabled={busy}
+          onChange={(e) => run(() => onUpdate(task.id, { status: e.target.value }))}
         >
           {Object.entries(STATUS_LABELS).map(([value, label]) => (
-            <option key={value} value={value}>{label}</option>
+            <option key={value} value={value}>
+              {label}
+            </option>
           ))}
         </select>
-        <button type="button" className="btn" onClick={() => setEditing(true)}>
+        <button type="button" className="btn" onClick={() => setEditing(true)} aria-label={`Modifier « ${task.title} »`}>
           Modifier
         </button>
-        <button type="button" className="btn btn-danger" onClick={handleDelete}>
+        <button
+          type="button"
+          className="btn btn-danger"
+          onClick={handleDelete}
+          disabled={busy}
+          aria-label={`Supprimer « ${task.title} »`}
+        >
           Supprimer
         </button>
       </div>

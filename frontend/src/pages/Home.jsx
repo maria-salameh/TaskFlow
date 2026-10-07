@@ -1,11 +1,21 @@
+import { useState } from "react";
 import TaskForm from "../components/TaskForm.jsx";
-import TaskItem from "../components/TaskItem.jsx";
-import ErrorMessage from "../components/ErrorMessage.jsx";
+import TaskList from "../components/TaskList.jsx";
+import TaskFilters from "../components/TaskFilters.jsx";
+import TaskCounter from "../components/TaskCounter.jsx";
 import { useTasks } from "../hooks/useTasks.js";
+import { useTaskCounts } from "../hooks/useTaskCounts.js";
+import { todayKey } from "../utils/dates.js";
+import { DEFAULT_FILTERS, buildTaskQuery, hasActiveFilters } from "../utils/taskFilters.js";
 
-// Page d'accueil : création + liste des tâches de l'utilisateur connecté.
+// Page d'accueil : création + liste filtrable des tâches de l'utilisateur connecté.
 export default function Home() {
-  const { tasks, loading, error, reload, createTask, updateTask, deleteTask } = useTasks();
+  const [filters, setFilters] = useState(DEFAULT_FILTERS);
+  const filtered = hasActiveFilters(filters);
+  const { tasks, loading, error, reload, version, createTask, updateTask, deleteTask } = useTasks(
+    buildTaskQuery(filters, todayKey()),
+  );
+  const counts = useTaskCounts(version);
 
   return (
     <section className="page home-page">
@@ -17,30 +27,21 @@ export default function Home() {
         </div>
 
         <div className="task-list-wrapper">
-          <h2>
-            Liste <span className="count">({tasks.length})</span>
-          </h2>
-
-          {loading && <p className="muted">Chargement…</p>}
-
-          {!loading && error && (
-            <div>
-              <ErrorMessage message={error} />
-              <button type="button" className="btn" onClick={reload}>Réessayer</button>
-            </div>
-          )}
-
-          {!loading && !error && tasks.length === 0 && (
-            <p className="empty">Aucune tâche pour l'instant. Ajoutez-en une avec le formulaire.</p>
-          )}
-
-          {!loading && !error && tasks.length > 0 && (
-            <ul className="task-list">
-              {tasks.map((task) => (
-                <TaskItem key={task.id} task={task} onUpdate={updateTask} onDelete={deleteTask} />
-              ))}
-            </ul>
-          )}
+          <TaskFilters value={filters} onChange={setFilters} />
+          <TaskCounter shown={tasks.length} counts={counts} filtered={filtered} />
+          <TaskList
+            tasks={tasks}
+            loading={loading}
+            error={error}
+            onRetry={reload}
+            onUpdate={updateTask}
+            onDelete={deleteTask}
+            emptyMessage={
+              filtered
+                ? "Aucune tâche ne correspond à ces filtres."
+                : "Aucune tâche pour l'instant. Ajoutez-en une avec le formulaire."
+            }
+          />
         </div>
       </div>
     </section>

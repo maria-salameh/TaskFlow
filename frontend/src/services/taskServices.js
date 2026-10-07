@@ -1,10 +1,14 @@
 import { apiRequest } from "./api.js";
 
-// Appels aux 5 routes du contrat TaskFlow (/api/tasks)
+// Appels aux routes /api/tasks (5 routes du contrat + compteur du bonus B1)
 
-export async function listTasks(token) {
-  const data = await apiRequest("/api/tasks", { token });
+export async function listTasks(token, query) {
+  const data = await apiRequest("/api/tasks", { token, query });
   return data.items;
+}
+
+export function countTasks(token, query) {
+  return apiRequest("/api/tasks/count", { token, query });
 }
 
 export function getTask(token, id) {
@@ -27,4 +31,10 @@ export const STATUS_LABELS = {
   todo: "À faire",
   doing: "En cours",
   done: "Terminée",
+};
+
+export const PRIORITY_LABELS = {
+  high: "Haute",
+  medium: "Moyenne",
+  low: "Basse",
 };

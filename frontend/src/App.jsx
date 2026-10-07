@@ -8,6 +8,8 @@ import Register from "./pages/RegisterPage.jsx";
 import Home from "./pages/Home.jsx";
 import CalendarPage from "./pages/CalendarPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
+import HabitsPage from "./pages/HabitsPage.jsx";
+import ActivityPage from "./pages/ActivityPage.jsx";
 
 function AppRoutes() {
   const { isAuthenticated } = useAuth();
@@ -19,9 +21,11 @@ function AppRoutes() {
         <Route path="/login" element={isAuthenticated ? <Navigate to="/" replace /> : <Login />} />
         <Route path="/register" element={isAuthenticated ? <Navigate to="/" replace /> : <Register />} />
 
-        {/* Pages privées */}
+        {/* Pages privées (sans session : redirection vers /login) */}
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
         <Route path="/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
+        <Route path="/habits" element={<ProtectedRoute><HabitsPage /></ProtectedRoute>} />
+        <Route path="/activity" element={<ProtectedRoute><ActivityPage /></ProtectedRoute>} />
         <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
 
         <Route path="*" element={<Navigate to="/" replace />} />

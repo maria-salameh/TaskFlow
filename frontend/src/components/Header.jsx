@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.js";
 
 export default function Header() {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
 
   function handleLogout() {
@@ -12,14 +12,20 @@ export default function Header() {
 
   return (
     <header className="header">
-      <NavLink to="/" className="brand">TaskFlow</NavLink>
+      <NavLink to="/" className="brand">
+        TaskFlow
+      </NavLink>
       <nav className="nav" aria-label="Navigation principale">
         {isAuthenticated ? (
           <>
-            <NavLink to="/" end>Mes tâches</NavLink>
+            <NavLink to="/" end>
+              Mes tâches
+            </NavLink>
             <NavLink to="/calendar">Calendrier</NavLink>
+            <NavLink to="/habits">Habitudes</NavLink>
+            <NavLink to="/activity">Activité</NavLink>
             <NavLink to="/dashboard">Dashboard</NavLink>
-            <button type="button" className="nav-logout" onClick={handleLogout}>
+            <button type="button" className="nav-logout" onClick={handleLogout} title={user?.email}>
               Déconnexion
             </button>
           </>

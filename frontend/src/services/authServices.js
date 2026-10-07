@@ -1,26 +1,11 @@
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
+import { apiRequest } from "./api.js";
 
-export async function login(email, password) {
-  const response = await fetch(`${API_URL}/api/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
-  if (!response.ok) {
-    throw new Error("Invalid email or password");
-  }
-  return response.json(); // { token }
+// Les deux routes renvoient { user: { id, email }, token }
+
+export function login(email, password) {
+  return apiRequest("/api/auth/login", { method: "POST", body: { email, password } });
 }
 
-export async function register(email, name, password) {
-  const response = await fetch(`${API_URL}/api/auth/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, name, password }),
-  });
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Registration failed");
-  }
-    return response.json(); // { token }
+export function register(email, password) {
+  return apiRequest("/api/auth/register", { method: "POST", body: { email, password } });
 }

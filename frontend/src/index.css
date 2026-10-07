@@ -276,6 +276,7 @@ button:disabled {
   padding: 1.75rem;
 }
 
+.auth-form h1,
 .auth-form h2,
 .auth-card h1 {
   margin: 0 0 0.5rem;
@@ -353,6 +354,10 @@ button:disabled {
 }
 
 .task-main {
+  min-width: 0;
+}
+
+.task-list-wrapper {
   min-width: 0;
 }
 
@@ -549,9 +554,423 @@ button:disabled {
   margin: 0.3rem 0 0;
 }
 
+/* ---------- Messages ---------- */
+
+.success-message {
+  background: var(--done-bg);
+  color: var(--done);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+}
+
+.page-intro {
+  margin: -0.75rem 0 1.25rem;
+  max-width: 48rem;
+  line-height: 1.5;
+}
+
+.btn-link {
+  border: none;
+  background: none;
+  color: var(--navy-light);
+  text-decoration: underline;
+  padding: 0.5rem 0.25rem;
+}
+
+.btn-link:hover {
+  background: none;
+  color: var(--navy);
+}
+
+/* ---------- Bonus B1 : priorité, filtres, compteur ---------- */
+
+.priority-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.12rem 0.45rem;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+  vertical-align: 2px;
+  border: 1px solid currentColor;
+}
+
+.priority-high { color: var(--danger); background: #fef2f2; }
+.priority-medium { color: #475569; background: #f1f5f9; }
+.priority-low { color: #64748b; background: transparent; border-style: dashed; }
+
+.task-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.6rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.75rem 1rem 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.filter-field {
+  flex: 1 1 8.5rem;
+  min-width: 0;
+}
+
+.filter-search {
+  flex: 2 1 12rem;
+}
+
+.filter-field label {
+  margin-top: 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.filter-field select,
+.filter-field input {
+  padding: 0.45rem 0.5rem;
+  font-size: 0.9rem;
+}
+
+.task-counter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0 0 0.75rem;
+}
+
+.counter-main {
+  margin: 0;
+  color: var(--muted);
+}
+
+.counter-main strong {
+  color: var(--text);
+  font-size: 1.15rem;
+}
+
+.counter-chips {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+}
+
+.counter-chips .badge {
+  margin: 0;
+}
+
+/* ---------- Bonus B2 : habitudes ---------- */
+
+.habits-page .card {
+  margin-bottom: 1.5rem;
+}
+
+.habit-form-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 11rem auto;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.habit-form-row label {
+  margin-top: 0;
+}
+
+.habit-form .form-actions {
+  margin-top: 0;
+}
+
+.habit-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.habit-card {
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--navy-light);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+}
+
+.habit-card.inactive {
+  border-left-color: #cbd5e1;
+  background: #fafbfc;
+}
+
+.habit-card.inactive h3 {
+  color: var(--muted);
+}
+
+.habit-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.habit-head h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  overflow-wrap: anywhere;
+}
+
+.habit-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.habit-meta .badge {
+  margin: 0;
+}
+
+.freq-badge {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.inactive-badge {
+  background: #f1f5f9;
+  color: var(--muted);
+}
+
+.streak strong {
+  color: var(--text);
+}
+
+.habit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: flex-start;
+}
+
+.habit-periods {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.9rem;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.period {
+  flex: 1 1 0;
+  min-width: 2.4rem;
+  max-width: 5.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  padding: 0.4rem 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: white;
+  font: inherit;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.period:hover:not(:disabled) {
+  border-color: var(--navy-light);
+}
+
+.period.current {
+  border-color: var(--navy);
+  border-width: 2px;
+}
+
+.period.done {
+  background: var(--done-bg);
+  border-color: var(--done);
+  color: var(--done);
+}
+
+.period:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.period-day {
+  font-size: 0.7rem;
+  text-transform: capitalize;
+  color: var(--muted);
+}
+
+.period-num {
+  font-weight: 700;
+}
+
+.period-week {
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.period-check {
+  height: 1rem;
+  font-weight: 700;
+}
+
+/* ---------- Bonus B3 : heatmap ---------- */
+
+.activity-toolbar {
+  margin-bottom: 1rem;
+}
+
+.segmented {
+  display: inline-flex;
+  flex-wrap: wrap;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+}
+
+.segmented button {
+  border: none;
+  background: none;
+  padding: 0.5rem 0.9rem;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.segmented button + button {
+  border-left: 1px solid #cbd5e1;
+}
+
+.segmented button.active {
+  background: var(--navy);
+  color: white;
+}
+
+.heatmap-card {
+  padding: 1rem;
+}
+
+.heatmap-scroll {
+  overflow-x: auto;
+}
+
+.heatmap {
+  --cell: 12px;
+  --gap: 3px;
+  display: inline-block;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.heatmap-months {
+  display: grid;
+  grid-template-columns: 1.8rem repeat(53, calc(var(--cell) + var(--gap)));
+  height: 1rem;
+  white-space: nowrap;
+  text-transform: capitalize;
+}
+
+.heatmap-body {
+  display: flex;
+  gap: var(--gap);
+}
+
+.heatmap-weekdays,
+.heatmap-week {
+  display: grid;
+  grid-template-rows: repeat(7, var(--cell));
+  gap: var(--gap);
+}
+
+.heatmap-weekdays {
+  width: calc(1.8rem - var(--gap));
+  line-height: var(--cell);
+}
+
+.heatmap-cell {
+  display: inline-block;
+  width: var(--cell, 12px);
+  height: var(--cell, 12px);
+  border-radius: 2px;
+  background: #ebedf0;
+}
+
+.heatmap-cell.future {
+  background: transparent;
+}
+
+.heatmap-cell.level-1 { background: #9be9a8; }
+.heatmap-cell.level-2 { background: #40c463; }
+.heatmap-cell.level-3 { background: #30a14e; }
+.heatmap-cell.level-4 { background: #216e39; }
+
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+  margin-top: 0.6rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.heatmap-legend span:first-child {
+  margin-right: 0.3rem;
+}
+
+.heatmap-legend span:last-child {
+  margin-left: 0.3rem;
+}
+
+.activity-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.activity-summary div {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+}
+
+.activity-summary dt {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.activity-summary dd {
+  margin: 0.3rem 0 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
 /* ---------- Mobile ---------- */
 
 @media (max-width: 760px) {
+  .habit-form-row {
+    grid-template-columns: 1fr;
+  }
+
   .home-grid,
   .calendar-details {
     grid-template-columns: 1fr;
