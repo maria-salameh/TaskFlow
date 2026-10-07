@@ -30,7 +30,7 @@
 ### Tache 1 : socle npm et hygiene du depot
 
 **Fichiers :**
-- Creer : `package.json`, `.gitignore`, `backend/.env.example`, `frontend/package.json`, `backend/package.json`.
+- Creer : `package.json`, `.gitignore`, `backend/.env`, `frontend/package.json`, `backend/package.json`.
 
 **Produit :** scripts racine `install`, `dev`, `build`, `start`; scripts locaux `dev`, `build` et `start` appropries.
 

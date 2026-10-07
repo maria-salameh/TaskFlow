@@ -20,7 +20,7 @@ Le backend separe la creation de l'application (`src/app.js`) de son ecoute rese
 - Frontend : port 5173 par defaut.
 - Backend : `PORT` lu dans l'environnement, avec 3000 comme valeur locale par defaut.
 - `GET /api/health` repond avec le code 200 et `{ "status": "ok" }`.
-- `.env.example` ne contient que `PORT=3000`.
+- `.env` ne contient que `PORT=3000`.
 
 ## Experience et documentation
 
