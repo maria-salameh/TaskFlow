@@ -4,11 +4,7 @@ import { requireAuth } from '../middlewares/requierAuth.js';
 
 export const userRouter = Router();
 userRouter.use(requireAuth);
-// Lire mon profil
-userRouter.get('/me', userController.getMe);
-// Editer mon profil
-userRouter.put('/me', userController.updateMe);
-// Supprimer mon profil
-userRouter.delete('/me', userController.deleteMe);
 
-
+userRouter.get('/me', userController.getMe); // Lire mon profil
+userRouter.patch('/me', userController.updateMe); // Modifier mon email
+userRouter.delete('/me', userController.deleteMe); // Supprimer mon compte et mes données

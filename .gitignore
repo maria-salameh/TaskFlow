@@ -7,3 +7,11 @@ coverage/
 npm-debug.log*
 *.log
 .DS_Store
+
+# Configuration d'IDE (propre à chaque poste)
+.idea/
+.vscode/
+
+# Rapports Playwright
+test-results/
+playwright-report/
