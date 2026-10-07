@@ -1,10 +1,16 @@
-import * as taskService from '../services/taskService.js'
+import * as taskService from '../services/taskService.js';
 
 // Les réponses suivent le contrat API v1 du livret (partie 4.4).
 
 export async function getAllTasks(request, response) {
-  const tasks = await taskService.listTasks(request.userId);
+  const tasks = await taskService.listTasks(request.userId, request.query);
   return response.status(200).json({ items: tasks });
+}
+
+// Bonus B1 : GET /api/tasks/count
+export async function countTasks(request, response) {
+  const counts = await taskService.countTasks(request.userId, request.query);
+  return response.status(200).json(counts);
 }
 
 export async function getTask(request, response) {
