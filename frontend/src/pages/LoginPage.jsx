@@ -19,7 +19,7 @@ export default function Login(){
         try {
             await login(email, password);
             // Redirect or update UI after successful login
-            navigate('/dashboard'); // Example: navigate to dashboard after login
+            navigate('/'); // Page d'accueil = mes tâches
         } catch (err) {
             setError(err.message || 'Login failed');
         } finally {
