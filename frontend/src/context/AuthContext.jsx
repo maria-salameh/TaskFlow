@@ -1,17 +1,18 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, createContext } from "react";
 import * as authService from "../services/authServices.js";
-import { AuthContext } from "./authContextObject.js";
 
 // Stratégie de session : le JWT est gardé dans le localStorage pour survivre à un
 // rechargement de page. Compromis : simple, mais lisible par un script injecté (XSS),
 // d'où l'expiration du jeton (7 jours par défaut) et React qui échappe le contenu affiché.
 // La vraie protection des données reste la vérification du JWT par l'API.
+export const AuthContext = createContext(null);
 
 function readSession() {
   try {
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user") ?? "null");
-    if (!token || token === "undefined" || token === "null") return { token: null, user: null };
+    if (!token || token === "undefined" || token === "null")
+      return { token: null, user: null };
     return { token, user };
   } catch {
     return { token: null, user: null };
