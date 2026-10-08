@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.js";
 import ErrorMessage from "../components/ErrorMessage.jsx";
+import AuthAside from "../components/AuthAside.jsx";
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -37,8 +38,10 @@ export default function RegisterPage() {
 
   return (
     <div className="auth-page">
-      <form className="auth-card" onSubmit={handleSubmit} noValidate>
+      <AuthAside />
+      <form className="auth-form" onSubmit={handleSubmit} noValidate>
         <h1>Créer un compte</h1>
+        <p className="auth-lead">Un email et un mot de passe suffisent.</p>
         <ErrorMessage message={error} />
         <label htmlFor="register-email">Email</label>
         <input

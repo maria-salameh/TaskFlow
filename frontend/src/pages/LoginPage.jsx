@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.js";
 import ErrorMessage from "../components/ErrorMessage.jsx";
+import AuthAside from "../components/AuthAside.jsx";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -27,8 +28,10 @@ export default function LoginPage() {
 
   return (
     <div className="auth-page">
+      <AuthAside />
       <form className="auth-form" onSubmit={handleSubmit}>
         <h1>Connexion</h1>
+        <p className="auth-lead">Content de vous revoir.</p>
         <ErrorMessage message={error} />
         <label htmlFor="login-email">Email</label>
         <input

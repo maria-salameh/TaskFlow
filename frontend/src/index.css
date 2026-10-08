@@ -1,22 +1,43 @@
-:root {
-  --navy: #1e3a5f;
-  --navy-light: #2c5282;
-  --text: #1f2937;
-  --muted: #64748b;
-  --border: #e2e8f0;
-  --bg: #f8fafc;
-  --surface: #ffffff;
-  --danger: #b91c1c;
-  --todo: #3b82f6;
-  --todo-bg: #dbeafe;
-  --doing: #b45309;
-  --doing-bg: #fef3c7;
-  --done: #15803d;
-  --done-bg: #dcfce7;
+/* =====================================================================
+   TaskFlow — identité visuelle « carnet de planification »
+   - papier vert-de-gris, encre sombre, vert forêt pour la structure
+   - un seul accent fort : le jaune surligneur, réservé à « où je suis »
+     (page active, titre de page, aujourd'hui)
+   - titres en Bricolage Grotesque, texte en Public Sans
+   ===================================================================== */
 
-  font-family: Arial, sans-serif;
-  color: var(--text);
-  background: var(--bg);
+:root {
+  --paper: #f3f5f0;
+  --surface: #ffffff;
+  --ink: #17201c;
+  --muted: #5e6a64;
+  --line: #d9ded6;
+  --line-strong: #c3cbc1;
+  --forest: #1e4d3b;
+  --forest-deep: #163a2c;
+  --forest-soft: #e4ede6;
+  --marker: #f2de4b;
+  --danger: #b42318;
+  --danger-soft: #fdecea;
+
+  --todo: #44658a;
+  --todo-bg: #e6edf5;
+  --doing: #9a6410;
+  --doing-bg: #faf0dc;
+  --done: #2e7d4f;
+  --done-bg: #e2f1e7;
+
+  --font-display: "Bricolage Grotesque Variable", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Public Sans", "Segoe UI", system-ui, sans-serif;
+  --radius: 10px;
+  --radius-sm: 6px;
+
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
 }
 
 * {
@@ -25,10 +46,23 @@
 
 body {
   margin: 0;
+  background: var(--paper);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+
+a {
+  color: var(--forest);
 }
 
 :focus-visible {
-  outline: 3px solid var(--navy-light);
+  outline: 3px solid var(--forest);
   outline-offset: 2px;
 }
 
@@ -41,97 +75,173 @@ body {
   white-space: nowrap;
 }
 
-/* ---------- Layout ---------- */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  z-index: 10;
+  background: var(--marker);
+  color: var(--ink);
+  padding: 0.5rem 0.8rem;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+}
 
-.layout {
+.skip-link:focus {
+  top: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
+
+/* ---------- Coquille de l'application ---------- */
+
+.app-shell {
   min-height: 100vh;
+  display: grid;
+  grid-template-columns: 15rem minmax(0, 1fr);
+}
+
+.app-shell {
+  background: linear-gradient(to right, var(--forest) 15rem, var(--paper) 15rem);
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  align-self: start;
   display: flex;
   flex-direction: column;
-}
-
-.header,
-.footer {
-  padding: 1rem clamp(1rem, 5vw, 4rem);
-  background: var(--navy);
-  color: white;
-}
-
-.header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
+  gap: 2rem;
+  padding: 1.5rem 1rem;
+  background: var(--forest);
+  color: #dfe9e2;
 }
 
 .brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0 0.5rem;
   color: white;
-  font-weight: 700;
-  font-size: 1.2rem;
   text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.brand .brand-mark {
+  color: var(--forest-deep);
 }
 
 .nav {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.25rem;
+  flex-direction: column;
+  gap: 0.15rem;
 }
 
-.nav a,
-.nav-logout {
-  color: #cbd5e1;
+.nav a {
+  display: block;
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--radius-sm);
+  color: #dfe9e2;
   text-decoration: none;
-  padding: 0.4rem 0.7rem;
-  border-radius: 6px;
-  font-size: 0.95rem;
+  font-weight: 600;
 }
 
-.nav a:hover,
-.nav a.active {
+.nav a:hover {
+  background: rgba(255, 255, 255, 0.08);
   color: white;
-  background: rgba(255, 255, 255, 0.12);
+}
+
+/* La page courante est « surlignée » */
+.nav a.active {
+  background: var(--marker);
+  color: var(--ink);
+}
+
+.sidebar-account {
+  margin-top: auto;
+  padding: 1rem 0.5rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.sidebar-email {
+  margin: 0 0 0.6rem;
+  font-size: 0.85rem;
+  color: #b9cdbf;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .nav-logout {
+  border: 1px solid rgba(255, 255, 255, 0.35);
   background: none;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  font-family: inherit;
-  margin-left: 0.25rem;
 }
 
 .nav-logout:hover {
-  color: white;
-  border-color: white;
+  background: rgba(255, 255, 255, 0.1);
 }
 
-.content {
-  width: min(100% - 2rem, 72rem);
-  margin: 0 auto;
-  flex: 1;
-  padding: 2rem 0;
+.nav-logout:focus-visible,
+.nav a:focus-visible,
+.brand:focus-visible {
+  outline-color: var(--marker);
 }
 
-.footer {
-  text-align: center;
-  font-size: 0.875rem;
+.app-main {
+  min-width: 0;
+  padding: 2.5rem clamp(1rem, 4vw, 3.5rem) 4rem;
 }
 
+.app-main:focus {
+  outline: none;
+}
+
+.page {
+  max-width: 72rem;
+}
+
+/* Titre de page : un trait de surligneur sous le mot, comme dans un carnet */
 .page h1 {
-  margin: 0 0 1.5rem;
-  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  width: fit-content;
+  margin: 0 0 1.75rem;
+  padding: 0 0.15em;
+  font-size: clamp(1.9rem, 3.5vw, 2.5rem);
+  font-weight: 700;
+  background: linear-gradient(to top, var(--marker) 0.32em, transparent 0.32em);
 }
 
 .page h2 {
-  margin: 0 0 1rem;
-  font-size: 1.15rem;
+  margin: 0 0 0.9rem;
+  font-size: 1.2rem;
+  font-weight: 700;
 }
+
+.page-intro {
+  margin: -0.75rem 0 1.75rem;
+  max-width: 44rem;
+  color: var(--muted);
+}
+
+/* ---------- Éléments communs ---------- */
 
 .card {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   padding: 1.25rem;
 }
 
@@ -152,32 +262,63 @@ body {
 }
 
 .empty {
-  color: var(--muted);
-  padding: 2rem 1rem;
+  margin: 0;
+  padding: 2.5rem 1.5rem;
   text-align: center;
-  border: 2px dashed var(--border);
-  border-radius: 10px;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
 }
 
-/* ---------- Formulaires & boutons ---------- */
+.badge {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  background: var(--status-bg, var(--forest-soft));
+  color: var(--status, var(--forest));
+  margin-right: 0.5rem;
+}
+
+.status-todo { --status: var(--todo); --status-bg: var(--todo-bg); }
+.status-doing { --status: var(--doing); --status-bg: var(--doing-bg); }
+.status-done { --status: var(--done); --status-bg: var(--done-bg); }
+
+/* ---------- Formulaires et boutons ---------- */
 
 label {
   display: block;
+  margin: 0.9rem 0 0.3rem;
   font-size: 0.9rem;
   font-weight: 600;
-  margin: 0.75rem 0 0.3rem;
 }
 
 input,
 select,
 textarea {
   width: 100%;
-  padding: 0.55rem 0.65rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  font: inherit;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
   background: white;
-  color: var(--text);
+  color: var(--ink);
+  font: inherit;
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: #9aa69e;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: 0;
+  border-color: var(--forest);
 }
 
 textarea {
@@ -192,193 +333,417 @@ textarea {
 
 .form-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: 1rem;
+  margin-top: 1.1rem;
 }
 
 .btn,
-.auth-page button[type="submit"] {
-  padding: 0.5rem 0.9rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
+.auth-form button[type="submit"] {
+  padding: 0.5rem 0.95rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
   background: white;
-  color: var(--text);
+  color: var(--ink);
   font: inherit;
   font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
 }
 
 .btn:hover {
-  background: #f1f5f9;
+  background: var(--paper);
+  border-color: #9aa69e;
 }
 
 .btn:disabled,
 button:disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: not-allowed;
 }
 
 .btn-primary,
-.auth-page button[type="submit"] {
-  background: var(--navy);
-  border-color: var(--navy);
+.auth-form button[type="submit"] {
+  background: var(--forest);
+  border-color: var(--forest);
   color: white;
-  font-weight: 600;
 }
 
 .btn-primary:hover,
-.auth-page button[type="submit"]:hover {
-  background: var(--navy-light);
+.auth-form button[type="submit"]:hover {
+  background: var(--forest-deep);
+  border-color: var(--forest-deep);
 }
 
 .btn-danger {
   color: var(--danger);
-  border-color: #fecaca;
 }
 
 .btn-danger:hover {
-  background: #fef2f2;
+  background: var(--danger-soft);
+  border-color: #f0b4ad;
+}
+
+.btn-link {
+  border: none;
+  background: none;
+  padding: 0.55rem 0.25rem;
+  color: var(--forest);
+  text-decoration: underline;
+}
+
+.btn-link:hover {
+  background: none;
+  color: var(--forest-deep);
 }
 
 .error-message {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  margin: 0 0 0.75rem;
+  padding: 0.6rem 0.8rem;
+  border-left: 4px solid var(--danger);
+  border-radius: var(--radius-sm);
+  background: var(--danger-soft);
   color: var(--danger);
-  border-radius: 6px;
-  padding: 0.5rem 0.75rem;
-  margin-bottom: 0.75rem;
 }
 
 .error-message p {
   margin: 0;
 }
 
+.success-message {
+  margin: 0 0 0.75rem;
+  padding: 0.5rem 0.8rem;
+  border-left: 4px solid var(--done);
+  border-radius: var(--radius-sm);
+  background: var(--done-bg);
+  color: var(--done);
+  font-size: 0.9rem;
+}
+
 .inline-error {
+  margin: 0.5rem 0 0;
   color: var(--danger);
   font-size: 0.85rem;
-  margin: 0.5rem 0 0;
 }
 
-/* ---------- Pages connexion / inscription ---------- */
+/* ---------- Connexion / inscription ---------- */
+
+.auth-shell {
+  min-height: 100vh;
+}
 
 .auth-page {
+  min-height: 100vh;
   display: grid;
-  place-items: center;
-  padding: 2rem 0;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
 }
 
-.auth-form,
-.auth-card {
-  width: min(100%, 26rem);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 1.75rem;
+.auth-aside {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 3rem clamp(1.5rem, 6vw, 5rem);
+  background: var(--forest);
+  color: #dfe9e2;
 }
 
-.auth-form h1,
-.auth-form h2,
-.auth-card h1 {
-  margin: 0 0 0.5rem;
-  font-size: 1.5rem;
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+  color: white;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
 }
 
-.auth-page button[type="submit"] {
+.auth-brand .brand-mark {
+  color: var(--forest-deep);
+}
+
+.auth-pitch {
+  margin: 0;
+  max-width: 18ch;
+  color: white;
+  font-family: var(--font-display);
+  font-size: clamp(2.1rem, 4.5vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+/* Mini liste d'exemple : la même grammaire visuelle que l'application */
+.auth-sample {
+  list-style: none;
+  margin: 0;
+  padding: 1rem 1.25rem;
+  max-width: 24rem;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: var(--radius);
+}
+
+.auth-sample li {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.45rem 0;
+  color: #dfe9e2;
+}
+
+.auth-sample li::before {
+  content: "";
+  flex: none;
+  width: 1.05rem;
+  height: 1.05rem;
+  border: 2px solid #9fbcab;
+  border-radius: 4px;
+}
+
+.auth-sample li.is-doing::before {
+  background: linear-gradient(to right, var(--marker) 50%, transparent 50%);
+  border-color: var(--marker);
+}
+
+.auth-sample li.is-done {
+  color: #9fbcab;
+  text-decoration: line-through;
+}
+
+.auth-sample li.is-done::before {
+  background: var(--marker);
+  border-color: var(--marker);
+}
+
+.auth-note {
+  margin: 0;
+  max-width: 28rem;
+  font-size: 0.9rem;
+  color: #b9cdbf;
+}
+
+.auth-form {
+  align-self: center;
+  justify-self: center;
+  width: min(100% - 2rem, 25rem);
+  padding: 2.5rem 0;
+}
+
+.auth-form h1 {
+  margin: 0 0 0.25rem;
+  font-size: 2rem;
+}
+
+.auth-lead {
+  margin: 0 0 1.25rem;
+  color: var(--muted);
+}
+
+.auth-form button[type="submit"] {
   width: 100%;
-  margin-top: 1.25rem;
-  padding: 0.65rem;
+  margin-top: 1.5rem;
+  padding: 0.75rem;
+  font-size: 1rem;
 }
 
 .switch {
+  margin: 1.25rem 0 0;
   text-align: center;
-  font-size: 0.9rem;
-  margin: 1rem 0 0;
+  font-size: 0.92rem;
 }
 
-/* ---------- Statuts ---------- */
-
-.status-todo { --status: var(--todo); --status-bg: var(--todo-bg); }
-.status-doing { --status: var(--doing); --status-bg: var(--doing-bg); }
-.status-done { --status: var(--done); --status-bg: var(--done-bg); }
-
-.badge {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 0.15rem 0.5rem;
-  border-radius: 999px;
-  background: var(--status-bg);
-  color: var(--status);
-  margin-right: 0.5rem;
-}
-
-/* ---------- Accueil : tâches ---------- */
+/* ---------- Mes tâches ---------- */
 
 .home-grid {
   display: grid;
-  grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: minmax(0, 21rem) minmax(0, 1fr);
+  gap: 2rem;
   align-items: start;
+}
+
+.home-grid > .card {
+  position: sticky;
+  top: 1.5rem;
 }
 
 .task-form h2 {
   margin-bottom: 0.25rem;
 }
 
-.task-list {
-  list-style: none;
+.task-list-wrapper {
+  min-width: 0;
+  container-type: inline-size;
+}
+
+/* Colonne étroite : les actions passent sous le texte de la tâche */
+@container (max-width: 44rem) {
+  .task-item {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .task-actions {
+    justify-content: flex-start;
+    max-width: none;
+  }
+}
+
+.task-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.6rem 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.filter-field {
+  flex: 1 1 8rem;
+  min-width: 0;
+}
+
+.filter-search {
+  flex: 2 1 13rem;
+}
+
+.filter-field label {
+  margin-top: 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.filter-field input,
+.filter-field select {
+  padding: 0.45rem 0.55rem;
+  font-size: 0.9rem;
+}
+
+.task-counter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.counter-main {
+  margin: 0;
+  color: var(--muted);
+}
+
+.counter-main strong {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+}
+
+.counter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
   margin: 0;
   padding: 0;
-  display: grid;
-  gap: 0.75rem;
+  list-style: none;
+}
+
+.counter-chips .badge {
+  margin: 0;
+}
+
+/* La liste est une seule feuille découpée en lignes, pas une pile de cartes */
+.task-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
 }
 
 .task-item {
   display: flex;
-  gap: 1rem;
   justify-content: space-between;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--status, var(--border));
-  border-radius: 10px;
-  padding: 1rem 1.1rem;
+  gap: 1rem;
+  padding: 1rem 1.15rem 1rem 1rem;
+  border-left: 4px solid var(--status, var(--line));
+}
+
+.task-item + .task-item {
+  border-top: 1px solid var(--line);
 }
 
 .task-item:has(.task-form) {
   display: block;
-}
-
-.status-done .task-main h3 {
-  text-decoration: line-through;
-  color: var(--muted);
+  background: var(--paper);
 }
 
 .task-main {
   min-width: 0;
 }
 
-.task-list-wrapper {
-  min-width: 0;
-}
-
 .task-main h3 {
-  margin: 0 0 0.35rem;
-  font-size: 1.05rem;
+  margin: 0 0 0.3rem;
+  font-family: var(--font-body);
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: 0;
   overflow-wrap: anywhere;
 }
 
+.status-done .task-main h3 {
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-color: var(--done);
+  text-decoration-thickness: 2px;
+}
+
+.priority-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-right: 0.55rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  vertical-align: 1px;
+  color: var(--muted);
+}
+
+.priority-badge::before {
+  content: "";
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.priority-high {
+  color: var(--danger);
+}
+
+.priority-medium {
+  color: var(--doing);
+}
+
+.priority-low {
+  color: #8a958f;
+}
+
 .task-description {
-  margin: 0 0 0.5rem;
-  color: #475569;
-  font-size: 0.92rem;
+  margin: 0 0 0.4rem;
+  color: #3f4a45;
+  font-size: 0.93rem;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
 .task-meta {
   margin: 0;
-  font-size: 0.85rem;
   color: var(--muted);
+  font-size: 0.85rem;
 }
 
 .overdue {
@@ -396,17 +761,19 @@ button:disabled {
   max-width: 19rem;
 }
 
-.task-actions .status-select {
-  width: auto;
+.task-actions .btn {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
 }
 
 .status-select {
+  width: auto;
+  padding: 0.42rem 0.5rem;
+  border-color: transparent;
   background: var(--status-bg);
   color: var(--status);
-  border-color: transparent;
-  font-weight: 600;
   font-size: 0.85rem;
-  padding: 0.4rem;
+  font-weight: 600;
 }
 
 /* ---------- Calendrier ---------- */
@@ -414,15 +781,15 @@ button:disabled {
 .calendar-toolbar {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
-.calendar-title {
+.page h1.calendar-title {
+  margin: 0;
   text-transform: capitalize;
-  margin: 0 !important;
 }
 
 .calendar-nav {
@@ -433,65 +800,66 @@ button:disabled {
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  background: var(--border);
   gap: 1px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
   overflow: hidden;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
 }
 
 .calendar-weekday {
-  background: #f1f5f9;
-  text-align: center;
+  padding: 0.5rem 0;
+  background: var(--paper);
+  color: var(--muted);
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--muted);
-  padding: 0.5rem 0;
+  text-align: center;
 }
 
 .calendar-day {
-  background: var(--surface);
-  border: none;
-  min-height: 6.5rem;
-  padding: 0.4rem;
-  text-align: left;
-  font: inherit;
-  cursor: pointer;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
   min-width: 0;
+  min-height: 6.5rem;
+  padding: 0.4rem;
+  border: none;
+  background: var(--surface);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 }
 
 .calendar-day:hover {
-  background: #f8fafc;
+  background: #fafbf8;
 }
 
 .calendar-day.outside {
-  background: #fafbfc;
+  background: #f8f9f6;
 }
 
 .calendar-day.outside .day-number {
-  color: #cbd5e1;
+  color: #b5bdb7;
 }
 
 .calendar-day.selected {
-  box-shadow: inset 0 0 0 2px var(--navy-light);
+  box-shadow: inset 0 0 0 2px var(--forest);
 }
 
 .day-number {
-  font-size: 0.85rem;
-  font-weight: 600;
-  width: 1.7rem;
-  height: 1.7rem;
   display: grid;
   place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
   border-radius: 50%;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .calendar-day.today .day-number {
-  background: var(--navy);
-  color: white;
+  background: var(--marker);
+  color: var(--ink);
+  font-weight: 700;
 }
 
 .day-events {
@@ -502,29 +870,30 @@ button:disabled {
 }
 
 .event {
-  font-size: 0.75rem;
   padding: 0.1rem 0.35rem;
-  border-radius: 4px;
+  overflow: hidden;
+  border-left: 3px solid var(--status);
+  border-radius: 3px;
   background: var(--status-bg);
   color: var(--status);
-  border-left: 3px solid var(--status);
+  font-size: 0.75rem;
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .event-more {
-  font-size: 0.72rem;
-  color: var(--muted);
   padding-left: 0.35rem;
+  color: var(--muted);
+  font-size: 0.72rem;
 }
 
 .calendar-legend {
   display: flex;
+  flex-wrap: wrap;
   gap: 1.25rem;
   margin: 0.75rem 0 1.5rem;
-  font-size: 0.85rem;
   color: var(--muted);
+  font-size: 0.85rem;
 }
 
 .legend-dot {
@@ -543,132 +912,18 @@ button:disabled {
 }
 
 .day-task-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
   display: grid;
   gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .day-task-list .task-description {
   margin: 0.3rem 0 0;
 }
 
-/* ---------- Messages ---------- */
-
-.success-message {
-  background: var(--done-bg);
-  color: var(--done);
-  border-radius: 6px;
-  padding: 0.5rem 0.75rem;
-  margin: 0 0 0.75rem;
-  font-size: 0.9rem;
-}
-
-.page-intro {
-  margin: -0.75rem 0 1.25rem;
-  max-width: 48rem;
-  line-height: 1.5;
-}
-
-.btn-link {
-  border: none;
-  background: none;
-  color: var(--navy-light);
-  text-decoration: underline;
-  padding: 0.5rem 0.25rem;
-}
-
-.btn-link:hover {
-  background: none;
-  color: var(--navy);
-}
-
-/* ---------- Bonus B1 : priorité, filtres, compteur ---------- */
-
-.priority-badge {
-  display: inline-block;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  padding: 0.12rem 0.45rem;
-  border-radius: 4px;
-  margin-right: 0.5rem;
-  vertical-align: 2px;
-  border: 1px solid currentColor;
-}
-
-.priority-high { color: var(--danger); background: #fef2f2; }
-.priority-medium { color: #475569; background: #f1f5f9; }
-.priority-low { color: #64748b; background: transparent; border-style: dashed; }
-
-.task-filters {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 0.6rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 0.75rem 1rem 0.9rem;
-  margin-bottom: 0.75rem;
-}
-
-.filter-field {
-  flex: 1 1 8.5rem;
-  min-width: 0;
-}
-
-.filter-search {
-  flex: 2 1 12rem;
-}
-
-.filter-field label {
-  margin-top: 0;
-  font-size: 0.8rem;
-  color: var(--muted);
-}
-
-.filter-field select,
-.filter-field input {
-  padding: 0.45rem 0.5rem;
-  font-size: 0.9rem;
-}
-
-.task-counter {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin: 0 0 0.75rem;
-}
-
-.counter-main {
-  margin: 0;
-  color: var(--muted);
-}
-
-.counter-main strong {
-  color: var(--text);
-  font-size: 1.15rem;
-}
-
-.counter-chips {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  margin: 0;
-  padding: 0;
-}
-
-.counter-chips .badge {
-  margin: 0;
-}
-
-/* ---------- Bonus B2 : habitudes ---------- */
+/* ---------- Habitudes (bonus B2) ---------- */
 
 .habits-page .card {
   margin-bottom: 1.5rem;
@@ -677,8 +932,8 @@ button:disabled {
 .habit-form-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 11rem auto;
-  gap: 0.75rem;
   align-items: end;
+  gap: 0.75rem;
 }
 
 .habit-form-row label {
@@ -690,25 +945,23 @@ button:disabled {
 }
 
 .habit-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
   display: grid;
   gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .habit-card {
   min-width: 0;
+  padding: 1rem 1.15rem;
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--navy-light);
-  border-radius: 10px;
-  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
 }
 
 .habit-card.inactive {
-  border-left-color: #cbd5e1;
-  background: #fafbfc;
+  background: #f8f9f6;
 }
 
 .habit-card.inactive h3 {
@@ -724,7 +977,7 @@ button:disabled {
 
 .habit-head h3 {
   margin: 0 0 0.35rem;
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   overflow-wrap: anywhere;
 }
 
@@ -734,67 +987,61 @@ button:disabled {
   align-items: center;
   gap: 0.5rem;
   margin: 0;
-  font-size: 0.85rem;
   color: var(--muted);
+  font-size: 0.85rem;
 }
 
 .habit-meta .badge {
   margin: 0;
 }
 
-.freq-badge {
-  background: #e0e7ff;
-  color: #3730a3;
-}
-
 .inactive-badge {
-  background: #f1f5f9;
-  color: var(--muted);
+  --status: var(--muted);
+  --status-bg: #eceee9;
 }
 
 .streak strong {
-  color: var(--text);
+  color: var(--ink);
 }
 
 .habit-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
   align-items: flex-start;
+  gap: 0.4rem;
 }
 
 .habit-periods {
   display: flex;
   gap: 0.4rem;
   margin-top: 0.9rem;
-  overflow-x: auto;
   padding-bottom: 2px;
+  overflow-x: auto;
 }
 
 .period {
-  flex: 1 1 0;
-  min-width: 2.4rem;
-  max-width: 5.5rem;
   display: flex;
+  flex: 1 1 0;
   flex-direction: column;
   align-items: center;
   gap: 0.1rem;
+  min-width: 2.4rem;
+  max-width: 5.5rem;
   padding: 0.4rem 0.25rem;
-  border: 1px solid var(--border);
+  border: 1px solid var(--line);
   border-radius: 8px;
   background: white;
+  color: var(--ink);
   font: inherit;
   cursor: pointer;
-  color: var(--text);
 }
 
 .period:hover:not(:disabled) {
-  border-color: var(--navy-light);
+  border-color: var(--forest);
 }
 
 .period.current {
-  border-color: var(--navy);
-  border-width: 2px;
+  border: 2px solid var(--ink);
 }
 
 .period.done {
@@ -804,14 +1051,14 @@ button:disabled {
 }
 
 .period:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
-  opacity: 0.55;
 }
 
 .period-day {
+  color: var(--muted);
   font-size: 0.7rem;
   text-transform: capitalize;
-  color: var(--muted);
 }
 
 .period-num {
@@ -829,7 +1076,7 @@ button:disabled {
   font-weight: 700;
 }
 
-/* ---------- Bonus B3 : heatmap ---------- */
+/* ---------- Activité / heatmap (bonus B3) ---------- */
 
 .activity-toolbar {
   margin-bottom: 1rem;
@@ -838,28 +1085,29 @@ button:disabled {
 .segmented {
   display: inline-flex;
   flex-wrap: wrap;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
   overflow: hidden;
   background: white;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
 }
 
 .segmented button {
+  padding: 0.5rem 0.95rem;
   border: none;
   background: none;
-  padding: 0.5rem 0.9rem;
+  color: var(--ink);
   font: inherit;
   font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
-  color: var(--text);
 }
 
 .segmented button + button {
-  border-left: 1px solid #cbd5e1;
+  border-left: 1px solid var(--line-strong);
 }
 
 .segmented button.active {
-  background: var(--navy);
+  background: var(--forest);
   color: white;
 }
 
@@ -875,8 +1123,8 @@ button:disabled {
   --cell: 12px;
   --gap: 3px;
   display: inline-block;
-  font-size: 0.7rem;
   color: var(--muted);
+  font-size: 0.7rem;
 }
 
 .heatmap-months {
@@ -909,17 +1157,18 @@ button:disabled {
   width: var(--cell, 12px);
   height: var(--cell, 12px);
   border-radius: 2px;
-  background: #ebedf0;
+  background: #e6eae3;
 }
 
 .heatmap-cell.future {
   background: transparent;
 }
 
-.heatmap-cell.level-1 { background: #9be9a8; }
-.heatmap-cell.level-2 { background: #40c463; }
-.heatmap-cell.level-3 { background: #30a14e; }
-.heatmap-cell.level-4 { background: #216e39; }
+/* Dégradé de la même famille que le vert forêt de l'interface */
+.heatmap-cell.level-1 { background: #bfdcc8; }
+.heatmap-cell.level-2 { background: #7fbb93; }
+.heatmap-cell.level-3 { background: #3f8f60; }
+.heatmap-cell.level-4 { background: #1e4d3b; }
 
 .heatmap-legend {
   display: flex;
@@ -927,8 +1176,8 @@ button:disabled {
   justify-content: flex-end;
   gap: 3px;
   margin-top: 0.6rem;
-  font-size: 0.75rem;
   color: var(--muted);
+  font-size: 0.75rem;
 }
 
 .heatmap-legend span:first-child {
@@ -947,32 +1196,120 @@ button:disabled {
 }
 
 .activity-summary div {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
   padding: 0.9rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
 }
 
 .activity-summary dt {
-  font-size: 0.8rem;
   color: var(--muted);
+  font-size: 0.85rem;
 }
 
 .activity-summary dd {
   margin: 0.3rem 0 0;
-  font-size: 1.2rem;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
   font-weight: 700;
 }
 
-/* ---------- Mobile ---------- */
+/* ---------- Dashboard : indicateurs en titres d'affichage ---------- */
 
-@media (max-width: 760px) {
-  .habit-form-row {
+.kpi-grid .card h3 {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.kpi-grid .card p {
+  font-family: var(--font-display);
+}
+
+/* ---------- Tablette et mobile ---------- */
+
+@media (max-width: 1000px) {
+  .home-grid {
     grid-template-columns: 1fr;
   }
 
-  .home-grid,
-  .calendar-details {
+  .home-grid > .card {
+    position: static;
+  }
+}
+
+@media (max-width: 760px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+    background: var(--paper);
+  }
+
+  /* La barre latérale devient une barre du haut */
+  .sidebar {
+    position: static;
+    height: auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+  }
+
+  .brand {
+    padding: 0;
+  }
+
+  .sidebar-account {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+
+  .sidebar-email {
+    display: none;
+  }
+
+  .nav {
+    order: 3;
+    grid-column: 1 / -1;
+    flex-direction: row;
+    gap: 0.25rem;
+    overflow-x: auto;
+  }
+
+  .nav a {
+    flex: none;
+    padding: 0.45rem 0.7rem;
+  }
+
+  .app-main {
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  .auth-page {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-aside {
+    gap: 1rem;
+    padding: 2rem 1.25rem;
+  }
+
+  .auth-sample,
+  .auth-note {
+    display: none;
+  }
+
+  .auth-pitch {
+    font-size: 1.9rem;
+  }
+
+  .calendar-details,
+  .habit-form-row {
     grid-template-columns: 1fr;
   }
 
@@ -986,19 +1323,19 @@ button:disabled {
   }
 
   .calendar-day {
-    min-height: 3.5rem;
     align-items: center;
+    min-height: 3.5rem;
   }
 
   /* Sur petit écran : un point par tâche au lieu du titre */
   .event {
-    font-size: 0;
     width: 0.5rem;
     height: 0.5rem;
     padding: 0;
     border: none;
     border-radius: 50%;
     background: var(--status);
+    font-size: 0;
   }
 
   .day-events {
